@@ -35,7 +35,7 @@
               <v-col cols="6">
                 <v-autocomplete
                   v-model="Product.supplier_id"
-                  label="Type"
+                  label="Supplier Type"
                   :loading="loadingtype"
                   :items="supplierName"
                   item-text="name"
@@ -80,7 +80,6 @@
     </v-card>
   </v-dialog>
 </template>
-
 
 <script>
 import Proxy from "@/services/proxy";
@@ -132,10 +131,15 @@ export default {
         image_url: this.Product.image_url,
         description: this.Product.description,
       };
-      const response = Proxy.post(uri + "/api/products", body, { headers });
-      console.log(response);
-      this.$emit("productAdded");
-      this.close();
+      Proxy.post(uri + "/api/products", body, { headers })
+        .then((res) => {
+          console.log(res);
+          this.$emit("productAdded");
+          this.close();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
   },
 

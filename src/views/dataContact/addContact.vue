@@ -423,16 +423,16 @@ export default {
   }),
 
   methods: {
-    removeEmail: function (index) {
+    removeEmail: function(index) {
       this.valueEmail.splice(index, 1);
     },
-    removePhone: function (index) {
+    removePhone: function(index) {
       this.valuePhone.splice(index, 1);
     },
-    removeAddress: function (index) {
+    removeAddress: function(index) {
       this.valueAddress.splice(index, 1);
     },
-    removeSocialAccount: function (index) {
+    removeSocialAccount: function(index) {
       this.valuesocialnetwork.splice(index, 1);
     },
     addemail() {
@@ -622,10 +622,15 @@ export default {
         addresses: this.valueAddress,
         socialnetwork: this.valuesocialnetwork,
       };
-      const response = Proxy.post(uri + "/api/contacts", body, { headers });
-      console.log(response.data);
-      this.$emit("contactAdded");
-      this.close();
+      Proxy.post(uri + "/api/contacts", body, { headers })
+        .then((res) => {
+          console.log(res);
+          this.$emit("contactAdded");
+          this.close();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
   },
 };

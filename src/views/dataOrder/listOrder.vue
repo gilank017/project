@@ -4,7 +4,11 @@
       :loading="loadingOrder"
       :headers="headers"
       :items="listOrder"
-      :item-key="id"
+      item-key="id"
+      :page="pageOrder"
+      :options.sync="optionsOrder"
+      :server-items-length="totalOrder"
+      @update:options="paginate"
       show-select
       class="elevation-1"
       loading-text="Loading . . . Please Wait"
@@ -87,9 +91,23 @@ export default {
         { text: "Actions", value: "actions", sortable: false },
       ],
       listOrder: [],
+      pageOrder: 1,
+      totalOrder: 0,
+      optionsOrder: {},
     };
   },
+  watch: {
+    options: {
+      handler() {
+        this.readDataFromAPI();
+      },
+    },
+    deep: true,
+  },
   methods: {
+    paginate() {
+      this.readDataFromAPI();
+    },
     create() {
       this.$router.push("/Menu/Order/createOrder");
     },
@@ -101,27 +119,35 @@ export default {
       console.log(id);
       this.$router.push("/Menu/Order/editOrder/" + id);
     },
+    readDataFromAPI() {
+      this.loadingOrder = true;
+      const uri = "https://api-dev.phantasmode.com";
+      // get token from localStorage
+      const token = localStorage.getItem("access_token");
+      // set the headers
+      const { page, itemsPerPage } = this.optionsOrder;
+      const headers = {
+        Authorization: "Bearer " + token,
+        Accept: "application/json",
+      };
+      Proxy.get(
+        uri + "/api/orders" + "?page=" + page + "&limit=" + itemsPerPage,
+        { headers }
+      )
+        .then((res) => {
+          this.listOrder = res.data.data;
+          this.totalOrder = res.data.total;
+          this.loadingOrder = false;
+        })
+        .catch((err) => {
+          console.log(err);
+          this.loadingOrder = false;
+        });
+    },
   },
 
   mounted() {
-    this.loadingOrder = true;
-    const uri = "https://api-dev.phantasmode.com";
-    // get token from localStorage
-    const token = localStorage.getItem("access_token");
-    // set the headers
-    const headers = {
-      Authorization: "Bearer " + token,
-      Accept: "application/json",
-    };
-    Proxy.get(uri + "/api/orders", { headers })
-      .then((res) => {
-        this.listOrder = res.data.data;
-        this.loadingOrder = false;
-      })
-      .catch((err) => {
-        console.log(err);
-        this.loadingOrder = false;
-      });
+    this.readDataFromAPI();
   },
 };
 </script>

@@ -42,6 +42,7 @@
 export default {
   methods: {
     redirectlogin() {
+      localStorage.removeItem("access_token");
       this.$router.push("/");
     },
   },
@@ -49,7 +50,6 @@ export default {
     drawer: true,
     links: [
       { icon: "dashboard", text: "Dasboard", route: "/Menu/Dashboard" },
-      { icon: "folder", text: "My Project", route: "/Menu/Folder" },
       { icon: "person", text: "Contact", route: "/Menu/Contact" },
       { icon: "store", text: "Product", route: "/Menu/Product" },
       { icon: "shopping_cart", text: "Order", route: "/Menu/Order" },

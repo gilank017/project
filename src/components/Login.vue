@@ -28,7 +28,7 @@
                       v-model="logininfo.email"
                       label="Email"
                       name="email"
-                      prepend-icon="email"
+                      prepend-icon="mdi-email"
                       type="text"
                       :rules="[required('email')]"
                     />
@@ -36,7 +36,7 @@
                       v-model="logininfo.password"
                       label="Password"
                       name="password"
-                      prepend-icon="lock"
+                      prepend-icon="mdi-lock"
                       :type="ShowPassword ? 'text' : 'password'"
                       :append-icon="ShowPassword ? 'mdi-eye-off' : 'mdi-eye'"
                       @click:append="ShowPassword = !ShowPassword"

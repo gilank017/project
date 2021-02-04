@@ -915,17 +915,18 @@ export default {
         addresses: this.valueAddress,
         socialnetwork: this.valuesocialnetwork,
       };
-      const response = Proxy.put(
-        uri + "/api/contacts/" + this.defaultItem.id,
-        body,
-        {
-          headers,
-        }
-      );
-      console.log(response.data);
-      this.snackbarUpdate.show = true;
-      this.readDataFromAPI();
-      this.closeEdit();
+      Proxy.put(uri + "/api/contacts/" + this.defaultItem.id, body, {
+        headers,
+      })
+        .then((res) => {
+          console.log(res);
+          this.snackbarUpdate.show = true;
+          this.readDataFromAPI();
+          this.closeEdit();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
     removeEmail: function(index) {
       this.valueEmail.splice(index, 1);

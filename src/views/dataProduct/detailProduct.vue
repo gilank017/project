@@ -191,9 +191,7 @@
 
 <script>
 import Proxy from "@/services/proxy";
-import { VueEditor } from "vue2-editor";
 export default {
-  components: { VueEditor },
   data() {
     return {
       dialog: false,

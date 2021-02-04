@@ -49,6 +49,7 @@
       :loading="loadingProduct"
       :headers="headers"
       :items="product"
+      :page="pageProduct"
       :options.sync="optionsProduct"
       :server-items-length="totalProduct"
       show-select
@@ -270,6 +271,7 @@ export default {
         message: "Product Deleted Successfully",
         colour: "success",
       },
+      pageProduct: 1,
       totalProduct: 0,
       optionsProduct: {},
       productId: 0,
@@ -329,9 +331,9 @@ export default {
           "&limit=" +
           itemsPerPage +
           "&sortBy=" +
-          (sortBy.length === 1 ? sortBy[0] : "created_at") +
+          (sortBy.length == 1 ? sortBy[0] : "created_at") +
           "&sortDirection=" +
-          (sortDesc.length === 1 ? (sortDesc[0] ? "desc" : "asc") : "desc"),
+          (sortDesc.length == 1 ? (sortDesc[0] ? "desc" : "asc") : "desc"),
         {
           headers,
         }
@@ -340,6 +342,7 @@ export default {
           this.totalProduct = res.data.total;
           this.product = res.data.data;
           this.loadingProduct = false;
+          this.readDataFromAPI();
         })
         .catch((err) => {
           console.log(err);
@@ -436,29 +439,31 @@ export default {
       console.log(id);
       this.$router.push("/Menu/Product/detailProduct/" + id);
     },
+
+    dataSupplier() {
+      this.loadingtype = true;
+      const uri = "https://api-dev.phantasmode.com";
+      // get token from localStorage
+      const token = localStorage.getItem("access_token");
+      // set the headers
+      const headers = {
+        Authorization: "Bearer " + token,
+        Accept: "application/json",
+      };
+      Proxy.get(uri + "/api/contacts" + "?type=2", { headers })
+        .then((res) => {
+          this.supplierName = res.data.data;
+          this.loadingtype = false;
+        })
+        .catch((err) => {
+          console.log(err);
+          this.loadingtype = false;
+        });
+    },
   },
 
   mounted() {
     this.readDataFromAPI();
-
-    this.loadingtype = true;
-    const uri = "https://api-dev.phantasmode.com";
-    // get token from localStorage
-    const token = localStorage.getItem("access_token");
-    // set the headers
-    const headers = {
-      Authorization: "Bearer " + token,
-      Accept: "application/json",
-    };
-    Proxy.get(uri + "/api/contacts" + "?type=2", { headers })
-      .then((res) => {
-        this.supplierName = res.data.data;
-        this.loadingtype = false;
-      })
-      .catch((err) => {
-        console.log(err);
-        this.loadingtype = false;
-      });
   },
 };
 </script>
